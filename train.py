@@ -1,8 +1,8 @@
 from __future__ import absolute_import, division, print_function
 import tensorflow as tf
-import resnet50
-import resnet101
-import resnet152
+from models import resnet50
+from models import resnet101
+from models import resnet152
 import config
 from prepare_data import get_datasets
 
