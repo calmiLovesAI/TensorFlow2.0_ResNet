@@ -1,6 +1,8 @@
 from __future__ import absolute_import, division, print_function
 import tensorflow as tf
-from model_definition import create_model
+import resnet50
+import resnet101
+import resnet152
 import config
 from prepare_data import get_datasets
 
@@ -19,7 +21,16 @@ tensorboard = tf.keras.callbacks.TensorBoard(log_dir='log')
 callback_list = [tensorboard]
 
 # start training
-model = create_model()
+model = resnet50.resnet50()
+if config.network == "resnet101":
+    model = resnet101.resnet101()
+if config.network == "resnet152":
+    model = resnet152.resnet152()
+
+model.compile(loss=tf.keras.losses.categorical_crossentropy,
+              optimizer=tf.keras.optimizers.SGD(learning_rate=0.001),
+              metrics=['accuracy'])
+
 model.fit(train_dataset,
           epochs=config.EPOCHS,
           steps_per_epoch=train_count // config.BATCH_SIZE,
