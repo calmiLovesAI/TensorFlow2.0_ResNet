@@ -1,8 +1,6 @@
 from __future__ import absolute_import, division, print_function
 import tensorflow as tf
-from models import resnet50
-from models import resnet101
-from models import resnet152
+from models import resnet50, resnet101, resnet152, resnet34
 import config
 from prepare_data import get_datasets
 
@@ -21,11 +19,13 @@ tensorboard = tf.keras.callbacks.TensorBoard(log_dir='log')
 callback_list = [tensorboard]
 
 # start training
-model = resnet50.resnet50()
+model = resnet50.ResNet50()
+if config.network == "resnet34":
+    model = resnet34.ResNet34()
 if config.network == "resnet101":
-    model = resnet101.resnet101()
+    model = resnet101.ResNet101()
 if config.network == "resnet152":
-    model = resnet152.resnet152()
+    model = resnet152.ResNet152()
 
 model.compile(loss=tf.keras.losses.categorical_crossentropy,
               optimizer=tf.keras.optimizers.SGD(learning_rate=0.001),

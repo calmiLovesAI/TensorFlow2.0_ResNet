@@ -10,5 +10,6 @@ dataset_dir = ""
 
 # choose a network
 network = "resnet50"
+# network = "resnet34"
 # network = "resnet101"
 # network = "resnet152"
