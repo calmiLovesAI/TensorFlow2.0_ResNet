@@ -8,6 +8,7 @@ channels = 3
 model_dir = "resnet_model.h5"
 dataset_dir = ""
 
+
 # choose a network
 network = "resnet50"
 # network = "resnet34"
