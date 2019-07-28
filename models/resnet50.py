@@ -2,8 +2,8 @@ import tensorflow as tf
 from models.residual_block import build_res_block_2
 from config import NUM_CLASSES
 
-class ResNet50(tf.keras.layers.Layer):
-    def __init__(self, num_classes=NUM_CLASSES):
+class ResNet50(tf.keras.Model):
+    def __init__(self, inputs, num_classes=NUM_CLASSES):
         super(ResNet50, self).__init__()
 
         self.preprocess = tf.keras.Sequential([
@@ -30,9 +30,9 @@ class ResNet50(tf.keras.layers.Layer):
                                         stride=2)
 
         self.avgpool = tf.keras.layers.GlobalAveragePooling2D()
-        self.fc = tf.keras.layers.Dense(units=num_classes)
+        self.fc = tf.keras.layers.Dense(units=num_classes, activation=tf.keras.activations.softmax)
 
-    def call(self, inputs, training=None):
+    def call(self, inputs):
         pre = self.preprocess(inputs)
         l1 = self.layer1(pre)
         l2 = self.layer1(l1)
