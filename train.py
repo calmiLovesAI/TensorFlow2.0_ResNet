@@ -19,24 +19,62 @@ tensorboard = tf.keras.callbacks.TensorBoard(log_dir='log')
 callback_list = [tensorboard]
 
 # start training
-model = resnet50.ResNet50()
-if config.network == "resnet34":
-    model = resnet34.ResNet34()
-if config.network == "resnet101":
-    model = resnet101.ResNet101()
-if config.network == "resnet152":
-    model = resnet152.ResNet152()
+# backbone = resnet50.ResNet50()
+# if config.model == "resnet34":
+backbone = resnet34.ResNet34()
+# if config.model == "resnet101":
+#     backbone = resnet101.ResNet101()
+# if config.model == "resnet152":
+#     backbone = resnet152.ResNet152()
+model = tf.keras.Sequential()
+model.add(backbone)
+model.build(input_shape=(None, config.image_height, config.image_width, config.channels))
 
-model.compile(loss=tf.keras.losses.categorical_crossentropy,
-              optimizer=tf.keras.optimizers.SGD(learning_rate=0.001),
-              metrics=['accuracy'])
+# model.compile(loss=tf.keras.losses.categorical_crossentropy,
+#               optimizer=tf.keras.optimizers.SGD(learning_rate=0.001),
+#               metrics=['accuracy'])
+# model.summary()
+#
+# model.fit(train_dataset,
+#           epochs=config.EPOCHS,
+#           steps_per_epoch=train_count // config.BATCH_SIZE,
+#           validation_data=test_dataset,
+#           validation_steps=test_count // config.BATCH_SIZE,
+#           callbacks=callback_list)
 
-model.fit(train_dataset,
-          epochs=config.EPOCHS,
-          steps_per_epoch=train_count // config.BATCH_SIZE,
-          validation_data=test_dataset,
-          validation_steps=test_count // config.BATCH_SIZE,
-          callbacks=callback_list)
+
+
+
+# optimizer = tf.keras.optimizers.SGD(learning_rate=config.learning_rate)
+# for epoch in range(config.EPOCHS):
+#     for step, (image, label) in enumerate(train_dataset):
+#         with tf.GradientTape() as tape:
+#             logits = model(image)
+#             label_onehot = tf.one_hot(label, depth=config.NUM_CLASSES)
+#             loss = tf.keras.losses.categorical_crossentropy(label_onehot, logits, from_logits=True)
+#         grads = tape.gradient(loss, model.trainable_variables)
+#         optimizer.apply_gradients(zip(grads, model.trainable_variables))
+#
+#         if step % 50 == 0:
+#             print("epoch : %d, step : %d, loss : %d"%(epoch, step, loss))
+#
+#     total_num = 0
+#     total_correct = 0
+#     for image, label in test_dataset:
+#         logits = model(image)
+#         prob = tf.nn.softmax(logits, axis=1)
+#         pred = tf.cast(tf.argmax(prob, axis=1), dtype=tf.int32)
+#         # pred = tf.cast(pred, dtype=tf.int32)
+#
+#         correct = tf.reduce_sum(tf.cast(tf.equal(pred, label), dtype=tf.int32))
+#
+#         total_num += image.shape[0]
+#         total_correct += int(correct)
+#
+#     accuracy = total_correct / total_num
+#     print("Accuracy : %.3f"%(accuracy))
+
+
 
 # save the whole model
 model.save(config.model_dir)

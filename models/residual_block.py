@@ -41,14 +41,14 @@ class BasicBlock(tf.keras.layers.Layer):
         return output
 
 
-def build_res_block_1(filter_num, blocks, stride=1):
-    res_block = tf.keras.Sequential()
-    res_block.add(BasicBlock(filter_num, stride))
-
-    for _ in range(1, blocks):
-        res_block.add(BasicBlock(filter_num, stride=1))
-
-    return res_block
+# def build_res_block_1(filter_num, blocks, stride=1):
+#     res_block = tf.keras.Sequential()
+#     res_block.add(BasicBlock(filter_num, stride))
+#
+#     for _ in range(1, blocks):
+#         res_block.add(BasicBlock(filter_num, stride=1))
+#
+#     return res_block
 
 
 class BottleNeck(tf.keras.layers.Layer):
