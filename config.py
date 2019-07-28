@@ -7,6 +7,7 @@ image_width = 256
 channels = 3
 model_dir = "resnet_model.h5"
 dataset_dir = "dataset/"
+proportion_of_test_set = 0.2
 
 
 # choose a network

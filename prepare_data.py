@@ -1,7 +1,7 @@
 import tensorflow as tf
 import config
 import pathlib
-from config import image_height, image_width, channels
+from config import image_height, image_width, channels, proportion_of_test_set
 
 
 def load_and_preprocess_image(img_path):
@@ -37,7 +37,7 @@ def get_datasets():
 
     # spit the dataset into train and test
     image_count = len(all_image_path)
-    test_count = int(image_count * 0.2)
+    test_count = int(image_count * proportion_of_test_set)
     train_count = image_count - test_count
     train_dataset = dataset.skip(test_count)
     test_dataset = dataset.take(test_count)
