@@ -6,11 +6,11 @@ image_height = 256
 image_width = 256
 channels = 3
 model_dir = "resnet_model.h5"
-dataset_dir = ""
+dataset_dir = "dataset/"
 
 
 # choose a network
-network = "resnet50"
 # network = "resnet34"
+network = "resnet50"
 # network = "resnet101"
 # network = "resnet152"
