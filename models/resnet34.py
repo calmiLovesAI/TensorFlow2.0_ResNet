@@ -1,6 +1,6 @@
 import tensorflow as tf
-from models.residual_block import BasicBlock, build_res_block
-from config import NUM_CLASSES, image_height, image_width, channels
+from models.residual_block import build_res_block_1
+from config import NUM_CLASSES
 
 
 class ResNet34(tf.keras.layers.Layer):
@@ -11,23 +11,23 @@ class ResNet34(tf.keras.layers.Layer):
         self.preprocess = tf.keras.Sequential([
             tf.keras.layers.Conv2D(filters=64,
                                    kernel_size=(7, 7),
-                                   strides=1),
+                                   strides=2,
+                                   padding='same'),
             tf.keras.layers.BatchNormalization(),
             tf.keras.layers.Activation(tf.keras.activations.relu),
-            tf.keras.layers.MaxPool2D(pool_size=2,
-                                      strides=1,
-                                      padding='same')
+            tf.keras.layers.MaxPool2D(pool_size=(3, 3),
+                                      strides=2)
         ])
 
-        self.layer1 = build_res_block(filter_num=64,
+        self.layer1 = build_res_block_1(filter_num=64,
                                       blocks=3)
-        self.layer2 = build_res_block(filter_num=128,
+        self.layer2 = build_res_block_1(filter_num=128,
                                       blocks=4,
                                       stride=2)
-        self.layer3 = build_res_block(filter_num=256,
+        self.layer3 = build_res_block_1(filter_num=256,
                                       blocks=6,
                                       stride=2)
-        self.layer4 = build_res_block(filter_num=512,
+        self.layer4 = build_res_block_1(filter_num=512,
                                       blocks=3,
                                       stride=2)
 

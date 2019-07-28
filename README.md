@@ -1,5 +1,5 @@
 # TensorFlow2.0_ResNet
-A ResNet implementation using TensorFlow-2.0
+A ResNet(**ResNet34, ResNet50, ResNet101, ResNet152**) implementation using TensorFlow-2.0
 
 ## Train
 

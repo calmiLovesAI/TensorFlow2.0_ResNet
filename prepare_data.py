@@ -1,15 +1,16 @@
 import tensorflow as tf
 import config
 import pathlib
+from config import image_height, image_width, channels
 
 
 def load_and_preprocess_image(img_path):
     # read pictures
     img_raw = tf.io.read_file(img_path)
     # decode pictures
-    img_tensor = tf.image.decode_jpeg(img_raw, channels=3)
+    img_tensor = tf.image.decode_jpeg(img_raw, channels=channels)
     # resize
-    img_tensor = tf.image.resize(img_tensor, [256, 256])
+    img_tensor = tf.image.resize(img_tensor, [image_height, image_width])
     img_tensor = tf.cast(img_tensor, tf.float32)
     # normalization
     img = img_tensor / 255.0
