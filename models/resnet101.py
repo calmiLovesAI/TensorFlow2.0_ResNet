@@ -32,12 +32,12 @@ class ResNet101(tf.keras.Model):
         self.avgpool = tf.keras.layers.GlobalAveragePooling2D()
         self.fc = tf.keras.layers.Dense(units=num_classes, activation=tf.keras.activations.softmax)
 
-    def call(self, inputs):
+    def call(self, inputs, training=None):
         pre = self.preprocess(inputs)
         l1 = self.layer1(pre)
-        l2 = self.layer1(l1)
-        l3 = self.layer1(l2)
-        l4 = self.layer1(l3)
+        l2 = self.layer2(l1)
+        l3 = self.layer3(l2)
+        l4 = self.layer4(l3)
         avgpool = self.avgpool(l4)
         out = self.fc(avgpool)
 
