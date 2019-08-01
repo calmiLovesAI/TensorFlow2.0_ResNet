@@ -32,7 +32,7 @@ model.build(input_shape=(None, config.image_height, config.image_width, config.c
 model.summary()
 
 model.compile(loss=tf.keras.losses.categorical_crossentropy,
-              optimizer=tf.keras.optimizers.SGD(learning_rate=config.learning_rate),
+              optimizer=tf.keras.optimizers.Adam(learning_rate=config.learning_rate),
               metrics=['accuracy'])
 
 model.fit(train_dataset,
