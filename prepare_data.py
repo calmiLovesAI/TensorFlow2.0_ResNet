@@ -43,7 +43,7 @@ def get_datasets():
     test_dataset = dataset.take(test_count)
 
     # read the dataset in the form of batch
-    train_dataset = train_dataset.shuffle(buffer_size=train_count).batch(batch_size=config.BATCH_SIZE)
-    test_dataset = test_dataset.batch(batch_size=config.BATCH_SIZE)
+    train_dataset = train_dataset.shuffle(buffer_size=train_count).batch(batch_size=config.BATCH_SIZE).repeat()
+    test_dataset = test_dataset.batch(batch_size=config.BATCH_SIZE).repeat()
 
     return train_dataset, test_dataset, train_count, test_count
