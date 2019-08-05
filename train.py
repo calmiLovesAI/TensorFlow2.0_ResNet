@@ -2,7 +2,6 @@ from __future__ import absolute_import, division, print_function
 import tensorflow as tf
 from models import resnet50, resnet101, resnet152, resnet34
 import config
-import numpy as np
 from prepare_data import get_datasets
 
 
