@@ -43,8 +43,8 @@ class SplitDataset():
         all_file_path = []
         index = 0
         for file_type in self.__get_label_names():
-            index += 1
             self.index_label_dict[index] = file_type
+            index += 1
             type_file_path = os.path.join(self.dataset_dir, file_type)
             file_path = []
             for file in os.listdir(type_file_path):
