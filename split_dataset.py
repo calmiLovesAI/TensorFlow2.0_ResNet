@@ -20,6 +20,8 @@ class SplitDataset():
         self.valid_file_path = []
         self.test_file_path = []
 
+        self.index_label_dict = {}
+
         self.show_progress = show_progress
 
         if not os.path.exists(self.saved_train_dir):
@@ -39,7 +41,10 @@ class SplitDataset():
 
     def __get_all_file_path(self):
         all_file_path = []
+        index = 0
         for file_type in self.__get_label_names():
+            index += 1
+            self.index_label_dict[index] = file_type
             type_file_path = os.path.join(self.dataset_dir, file_type)
             file_path = []
             for file in os.listdir(type_file_path):
@@ -80,9 +85,9 @@ class SplitDataset():
             train_num = int(file_path_list_length * self.train_ratio)
             test_num = int(file_path_list_length * self.test_radio)
 
-            self.train_file_path.append([index, file_path_list[: train_num]])
-            self.test_file_path.append([index, file_path_list[train_num:train_num + test_num]])
-            self.valid_file_path.append([index, file_path_list[train_num + test_num:]])
+            self.train_file_path.append([self.index_label_dict[index], file_path_list[: train_num]])
+            self.test_file_path.append([self.index_label_dict[index], file_path_list[train_num:train_num + test_num]])
+            self.valid_file_path.append([self.index_label_dict[index], file_path_list[train_num + test_num:]])
 
     def __get_train_file_path(self):
         self.__split_dataset()
