@@ -11,7 +11,7 @@ if __name__ == '__main__':
         for gpu in gpus:
             tf.config.experimental.set_memory_growth(gpu, True)
 
-    # get the dataset
+    # get the original_dataset
     train_dataset, test_dataset, train_count, test_count = get_datasets()
     print(train_dataset)
     # load the model

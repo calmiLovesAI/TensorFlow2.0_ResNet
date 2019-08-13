@@ -20,7 +20,7 @@ def get_model():
 
     model.compile(loss=tf.keras.losses.categorical_crossentropy,
                   optimizer=tf.keras.optimizers.Adam(learning_rate=config.learning_rate),
-                  metrics=['accuracy'])
+                  metrics=[tf.keras.metrics.Accuracy()])
 
     return model
 
@@ -33,8 +33,9 @@ if __name__ == '__main__':
             tf.config.experimental.set_memory_growth(gpu, True)
 
 
-    # get the dataset
-    train_dataset, test_dataset, train_count, test_count = get_datasets()
+    # get the original_dataset
+    # train_dataset, test_dataset, train_count, test_count = get_datasets()
+    train_generator, valid_generator, test_generator, train_num, valid_num, test_num = get_datasets()
 
     # Use command tensorboard --logdir "log" to start tensorboard
     tensorboard = tf.keras.callbacks.TensorBoard(log_dir='log')
@@ -46,12 +47,12 @@ if __name__ == '__main__':
 
     # start training
     print("----------start training---------")
-    model.fit(train_dataset,
-              epochs=config.EPOCHS,
-              steps_per_epoch=train_count // config.BATCH_SIZE,
-              validation_data=test_dataset,
-              validation_steps=test_count // config.BATCH_SIZE,
-              callbacks=callback_list)
+    model.fit_generator(train_generator,
+                        epochs=config.EPOCHS,
+                        steps_per_epoch=train_num // config.BATCH_SIZE,
+                        validation_data=valid_generator,
+                        validation_steps=valid_num // config.BATCH_SIZE,
+                        callbacks=callback_list)
 
     # save the weights
     model.save_weights(filepath=config.save_model_dir, save_format='tf')

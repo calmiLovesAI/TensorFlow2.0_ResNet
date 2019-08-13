@@ -6,8 +6,8 @@ image_height = 224
 image_width = 224
 channels = 3
 save_model_dir = "saved_model/"
-dataset_dir = "dataset/"
-proportion_of_test_set = 0.2
+dataset_dir = "original_dataset/"
+# proportion_of_test_set = 0.2
 learning_rate = 0.001
 
 # choose a network
