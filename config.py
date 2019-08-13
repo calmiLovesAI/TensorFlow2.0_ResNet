@@ -6,7 +6,10 @@ image_height = 224
 image_width = 224
 channels = 3
 save_model_dir = "saved_model/"
-dataset_dir = "original_dataset/"
+dataset_dir = "dataset/"
+train_dir = dataset_dir + "train/"
+valid_dir = dataset_dir + "valid/"
+test_dir = dataset_dir + "test/"
 # proportion_of_test_set = 0.2
 learning_rate = 0.001
 
