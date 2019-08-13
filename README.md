@@ -14,9 +14,10 @@ A ResNet(**ResNet34, ResNet50, ResNet101, ResNet152**) implementation using Tens
    |——class_name_2
    |——class_name_3
 ```
-3. Change the corresponding parameters in **config.py**.
+3. Run the script **split_dataset.py** to split the raw dataset into train set, valid set and test set.
+4. Change the corresponding parameters in **config.py**.
 
-4. Run **train.py** to start training.
+5. Run **train.py** to start training.
 ## Evaluate
 Run **evaluate.py** to evaluate the model's performance on the test dataset.
 
