@@ -11,7 +11,7 @@ proportion_of_test_set = 0.2
 learning_rate = 0.001
 
 # choose a network
-model = "resnet34"
-# model = "resnet50"
+# model = "resnet34"
+model = "resnet50"
 # model = "resnet101"
 # model = "resnet152"
