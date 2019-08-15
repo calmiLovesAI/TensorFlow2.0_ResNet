@@ -14,13 +14,8 @@ def get_model():
     if config.model == "resnet152":
         model = resnet152.ResNet152()
 
-
     model.build(input_shape=(None, config.image_height, config.image_width, config.channels))
     model.summary()
-
-    model.compile(loss=tf.keras.losses.categorical_crossentropy,
-                  optimizer=tf.keras.optimizers.Adam(learning_rate=config.learning_rate),
-                  metrics=[tf.keras.metrics.Accuracy()])
 
     return model
 
@@ -34,25 +29,49 @@ if __name__ == '__main__':
 
 
     # get the original_dataset
-    # train_dataset, test_dataset, train_count, test_count = get_datasets()
-    train_generator, valid_generator, test_generator, train_num, valid_num, test_num = get_datasets()
+    train_dataset, test_dataset, train_count, test_count = get_datasets()
 
     # Use command tensorboard --logdir "log" to start tensorboard
-    tensorboard = tf.keras.callbacks.TensorBoard(log_dir='log')
-    callback_list = [tensorboard]
+    # tensorboard = tf.keras.callbacks.TensorBoard(log_dir='log')
+    # callback_list = [tensorboard]
 
     # create model
     model = get_model()
 
+    optimizer = tf.keras.optimizers.Adam(learning_rate=config.learning_rate)
 
     # start training
-    print("----------start training---------")
-    model.fit_generator(train_generator,
-                        epochs=config.EPOCHS,
-                        steps_per_epoch=train_num // config.BATCH_SIZE,
-                        validation_data=valid_generator,
-                        validation_steps=valid_num // config.BATCH_SIZE,
-                        callbacks=callback_list)
+    for epoch in range(config.EPOCHS):
+        for step, (image, label) in enumerate(train_dataset):
+            with tf.GradientTape() as tape:
+                logits = model(image)
+                label_one_hot = tf.one_hot(label, depth=config.NUM_CLASSES)
+                loss = tf.reduce_mean(tf.losses.categorical_crossentropy(y_true=label_one_hot,
+                                                                         y_pred=logits,
+                                                                         from_logits=True))
+            grads = tape.gradient(loss, model.trainable_variables)
+            optimizer.apply_gradients(zip(grads, model.trainable_variables))
+
+            print("Epoch: {}/{}, step: {}/{}, loss: {:.5f}".format(epoch,
+                                                                   config.EPOCHS,
+                                                                   step,
+                                                                   train_count // config.BATCH_SIZE,
+                                                                   loss))
+
+        total_correct = 0
+        total_sum = 0
+        for image, label in test_dataset:
+            logits = model(image)
+            prob = tf.nn.softmax(logits=logits, axis=1)
+            pred = tf.cast(tf.argmax(prob, axis=1), dtype=tf.int32)
+            correct = tf.reduce_sum(tf.cast(tf.equal(pred, label), dtype=tf.int32))
+            total_correct += int(correct)
+            total_sum += image.shape[0]
+
+        accuracy = total_correct / total_sum
+
+        print("Epoch: {}/{}, accuracy: {:.5f}".format(epoch, config.EPOCHS, accuracy))
+
 
     # save the weights
     model.save_weights(filepath=config.save_model_dir, save_format='tf')
