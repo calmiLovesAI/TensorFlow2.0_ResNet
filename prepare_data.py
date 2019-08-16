@@ -1,56 +1,8 @@
 import tensorflow as tf
 import config
 import pathlib
-from config import image_height, image_width, channels, proportion_of_test_set
+from config import image_height, image_width, channels
 
-
-# def get_datasets():
-    # Preprocess the original_dataset
-    # train_datagen = tf.keras.preprocessing.image.ImageDataGenerator(
-    #     rescale=1.0 / 255.0
-    # )
-    #
-    # train_generator = train_datagen.flow_from_directory(config.train_dir,
-    #                                                     target_size=(config.image_height, config.image_width),
-    #                                                     color_mode="rgb",
-    #                                                     batch_size=config.BATCH_SIZE,
-    #                                                     seed=1,
-    #                                                     shuffle=True,
-    #                                                     class_mode="categorical")
-    #
-    # valid_datagen = tf.keras.preprocessing.image.ImageDataGenerator(
-    #     rescale=1.0 /255.0
-    # )
-    # valid_generator = valid_datagen.flow_from_directory(config.valid_dir,
-    #                                                     target_size=(config.image_height, config.image_width),
-    #                                                     color_mode="rgb",
-    #                                                     batch_size=config.BATCH_SIZE,
-    #                                                     seed=7,
-    #                                                     shuffle=True,
-    #                                                     class_mode="categorical"
-    #                                                     )
-    # test_datagen = tf.keras.preprocessing.image.ImageDataGenerator(
-    #     rescale=1.0 /255.0
-    # )
-    # test_generator = test_datagen.flow_from_directory(config.test_dir,
-    #                                                   target_size=(config.image_height, config.image_width),
-    #                                                   color_mode="rgb",
-    #                                                   batch_size=config.BATCH_SIZE,
-    #                                                   seed=7,
-    #                                                   shuffle=True,
-    #                                                   class_mode="categorical"
-    #                                                   )
-    #
-    #
-    # train_num = train_generator.samples
-    # valid_num = valid_generator.samples
-    # test_num = test_generator.samples
-    #
-    #
-    # return train_generator, \
-    #        valid_generator, \
-    #        test_generator, \
-    #        train_num, valid_num, test_num
 
 def load_and_preprocess_image(img_path):
     # read pictures
@@ -64,34 +16,40 @@ def load_and_preprocess_image(img_path):
     img = img_tensor / 255.0
     return img
 
-
-def get_datasets():
+def get_images_and_labels(data_root_dir):
     # get all images' paths (format: string)
-    data_dir = config.dataset_dir
-    data_root = pathlib.Path(data_dir)
-    all_image_path = list(data_root.glob('*/*'))
-    all_image_path = [str(path) for path in all_image_path]
+    data_root = pathlib.Path(data_root_dir)
+    all_image_path = [str(path) for path in list(data_root.glob('*/*'))]
     # get labels' names
     label_names = sorted(item.name for item in data_root.glob('*/'))
-    # dict: name->index
-    label_to_index = dict((index, name) for name, index in enumerate(label_names))
+    # dict: {label : index}
+    label_to_index = dict((index, label) for label, index in enumerate(label_names))
     # get all images' labels
-    all_image_label = [label_to_index[pathlib.Path(p).parent.name] for p in all_image_path]
+    all_image_label = [label_to_index[pathlib.Path(single_image_path).parent.name] for single_image_path in all_image_path]
 
-    # load original_dataset and preprocess images
+    return all_image_path, all_image_label
+
+
+def get_dataset(dataset_root_dir):
+    all_image_path, all_image_label = get_images_and_labels(data_root_dir=dataset_root_dir)
+    # load the dataset and preprocess images
     image_dataset = tf.data.Dataset.from_tensor_slices(all_image_path).map(load_and_preprocess_image)
     label_dataset = tf.data.Dataset.from_tensor_slices(all_image_label)
-    original_dataset = tf.data.Dataset.zip((image_dataset, label_dataset))
-
-    # spit the original_dataset into train and test
+    dataset = tf.data.Dataset.zip((image_dataset, label_dataset))
     image_count = len(all_image_path)
-    test_count = int(image_count * proportion_of_test_set)
-    train_count = image_count - test_count
-    train_dataset = original_dataset.skip(test_count)
-    test_dataset = original_dataset.take(test_count)
+
+    return dataset, image_count
+
+
+def generate_datasets():
+    train_dataset, train_count = get_dataset(dataset_root_dir=config.train_dir)
+    valid_dataset, valid_count = get_dataset(dataset_root_dir=config.valid_dir)
+    test_dataset, test_count = get_dataset(dataset_root_dir=config.test_dir)
+
 
     # read the original_dataset in the form of batch
-    train_dataset = train_dataset.shuffle(buffer_size=train_count).batch(batch_size=config.BATCH_SIZE).repeat()
-    test_dataset = test_dataset.batch(batch_size=config.BATCH_SIZE).repeat()
+    train_dataset = train_dataset.shuffle(buffer_size=train_count).batch(batch_size=config.BATCH_SIZE)
+    valid_dataset = valid_dataset.batch(batch_size=config.BATCH_SIZE)
+    test_dataset = test_dataset.batch(batch_size=config.BATCH_SIZE)
 
-    return train_dataset, test_dataset, train_count, test_count
+    return train_dataset, valid_dataset, test_dataset, train_count, valid_count, test_count
