@@ -10,7 +10,6 @@ class BasicBlock(tf.keras.layers.Layer):
                                             strides=stride,
                                             padding="same")
         self.bn1 = tf.keras.layers.BatchNormalization()
-        self.relu = tf.keras.layers.Activation(tf.keras.activations.relu)
         self.conv2 = tf.keras.layers.Conv2D(filters=filter_num,
                                             kernel_size=(3, 3),
                                             strides=1,
@@ -20,8 +19,7 @@ class BasicBlock(tf.keras.layers.Layer):
             self.downsample = tf.keras.Sequential()
             self.downsample.add(tf.keras.layers.Conv2D(filters=filter_num,
                                                        kernel_size=(1, 1),
-                                                       strides=stride,
-                                                       padding="valid"))
+                                                       strides=stride))
             self.downsample.add(tf.keras.layers.BatchNormalization())
         else:
             self.downsample = lambda x: x
@@ -32,7 +30,7 @@ class BasicBlock(tf.keras.layers.Layer):
 
         conv1 = self.conv1(inputs)
         bn1 = self.bn1(conv1)
-        relu = self.relu(bn1)
+        relu = tf.nn.relu(bn1)
         conv2 = self.conv2(relu)
         bn2 = self.bn2(conv2)
 

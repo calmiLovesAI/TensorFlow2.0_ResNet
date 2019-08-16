@@ -31,6 +31,7 @@ class SplitDataset():
         if not os.path.exists(self.saved_valid_dir):
             os.mkdir(self.saved_valid_dir)
 
+
     def __get_label_names(self):
         label_names = []
         for item in os.listdir(self.dataset_dir):
@@ -53,18 +54,7 @@ class SplitDataset():
             all_file_path.append(file_path)
         return all_file_path
 
-    def __copy_files(self, dataset_type):
-        type_path = ""
-        type_saved_dir = ""
-        if dataset_type == "train":
-            type_path = self.__get_train_file_path()
-            type_saved_dir = self.saved_train_dir
-        elif dataset_type == "test":
-            type_path = self.__get_test_file_path()
-            type_saved_dir = self.saved_test_dir
-        elif dataset_type == "valid":
-            type_path = self.__get_valid_file_path()
-            type_saved_dir = self.saved_valid_dir
+    def __copy_files(self, type_path, type_saved_dir):
         for item in type_path:
             src_path_list = item[1]
             dst_path = type_saved_dir + "%s/" % (item[0])
@@ -89,22 +79,11 @@ class SplitDataset():
             self.test_file_path.append([self.index_label_dict[index], file_path_list[train_num:train_num + test_num]])
             self.valid_file_path.append([self.index_label_dict[index], file_path_list[train_num + test_num:]])
 
-    def __get_train_file_path(self):
-        self.__split_dataset()
-        return self.train_file_path
-
-    def __get_test_file_path(self):
-        self.__split_dataset()
-        return self.test_file_path
-
-    def __get_valid_file_path(self):
-        self.__split_dataset()
-        return self.valid_file_path
-
     def start_splitting(self):
-        self.__copy_files(dataset_type="train")
-        self.__copy_files(dataset_type="test")
-        self.__copy_files(dataset_type="valid")
+        self.__split_dataset()
+        self.__copy_files(type_path=self.train_file_path, type_saved_dir=self.saved_train_dir)
+        self.__copy_files(type_path=self.valid_file_path, type_saved_dir=self.saved_valid_dir)
+        self.__copy_files(type_path=self.test_file_path, type_saved_dir=self.saved_test_dir)
 
 
 if __name__ == '__main__':

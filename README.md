@@ -6,7 +6,7 @@ A ResNet(**ResNet34, ResNet50, ResNet101, ResNet152**) implementation using Tens
 1. Requirements:
 + Python 3.6
 + Tensorflow 2.0.0-beta1
-2. To train the ResNet on your own dataset, you can put the dataset under the folder **dataset**, and the directory should look like this:
+2. To train the ResNet on your own dataset, you can put the dataset under the folder **original dataset**, and the directory should look like this:
 ```
 |——dataset
    |——class_name_0
@@ -16,8 +16,8 @@ A ResNet(**ResNet34, ResNet50, ResNet101, ResNet152**) implementation using Tens
 ```
 3. Run the script **split_dataset.py** to split the raw dataset into train set, valid set and test set.
 4. Change the corresponding parameters in **config.py**.
-
 5. Run **train.py** to start training.
+6. If you want to use the custom training strategy, you should delete the activation function of the last layer in the model structure before training.
 ## Evaluate
 Run **evaluate.py** to evaluate the model's performance on the test dataset.
 

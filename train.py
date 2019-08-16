@@ -37,51 +37,61 @@ if __name__ == '__main__':
 
     # create model
     model = get_model()
+    model.compile(loss=tf.keras.losses.categorical_crossentropy,
+                  optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
+                  metrics=['accuracy'])
 
-    optimizer = tf.keras.optimizers.SGD(learning_rate=config.learning_rate)
+    model.fit(train_dataset,
+              epochs=config.EPOCHS,
+              steps_per_epoch=train_count // config.BATCH_SIZE,
+              validation_data=valid_dataset,
+              validation_steps=valid_count // config.BATCH_SIZE
+              )
 
-    # start training
-    for epoch in range(config.EPOCHS):
-        train_total_correct = 0
-        train_image_num = 0
-        for step, (image, label) in enumerate(train_dataset):
-            with tf.GradientTape() as tape:
-                train_logits = model(image)
-                label_one_hot = tf.one_hot(label, depth=config.NUM_CLASSES)
-                loss = tf.reduce_mean(tf.losses.categorical_crossentropy(y_true=label_one_hot,
-                                                                         y_pred=train_logits,
-                                                                         from_logits=True))
-            grads = tape.gradient(loss, model.trainable_variables)
-            optimizer.apply_gradients(zip(grads, model.trainable_variables))
 
-            # calculate train accuracy
-            train_prob = tf.nn.softmax(logits=train_logits, axis=1)
-            train_pred = tf.cast(tf.argmax(train_prob, axis=1), dtype=tf.int32)
-            correct_num = tf.reduce_sum(tf.cast(tf.equal(train_pred, label), dtype=tf.int32))
-            train_total_correct += correct_num
-            train_image_num += image.shape[0]
-            train_accuracy = train_total_correct / train_image_num
 
-            print("Epoch: {}/{}, step: {}/{}, loss: {:.5f}, train accuracy: {:.5f}".format(epoch + 1,
-                                                                                           config.EPOCHS,
-                                                                                           step + 1,
-                                                                                           train_count // config.BATCH_SIZE,
-                                                                                           loss,
-                                                                                           train_accuracy))
-
-        total_correct = 0
-        total_sum = 0
-        for image, label in valid_dataset:
-            logits = model(image)
-            prob = tf.nn.softmax(logits=logits, axis=1)
-            pred = tf.cast(tf.argmax(prob, axis=1), dtype=tf.int32)
-            correct = tf.reduce_sum(tf.cast(tf.equal(pred, label), dtype=tf.int32))
-            total_correct += int(correct)
-            total_sum += image.shape[0]
-
-        accuracy = total_correct / total_sum
-
-        print("Epoch: {}/{}, valid accuracy: {:.5f}".format(epoch + 1, config.EPOCHS, accuracy))
+    # Use a custom training strategy
+    # # optimizer
+    # optimizer = tf.keras.optimizers.Adadelta()
+    # # metrics
+    # metric_train = tf.keras.metrics.Accuracy()
+    # metric_valid = tf.keras.metrics.Accuracy()
+    #
+    # # start training
+    # for epoch in range(config.EPOCHS):
+    #     metric_train.reset_states()
+    #     # train_total_correct = 0
+    #     # train_image_num = 0
+    #     for step, (image, label) in enumerate(train_dataset):
+    #         with tf.GradientTape() as tape:
+    #             train_logits = model(image)
+    #             label_one_hot = tf.one_hot(label, depth=config.NUM_CLASSES)
+    #             loss = tf.reduce_mean(tf.keras.losses.categorical_crossentropy(y_true=label_one_hot,
+    #                                                                            y_pred=train_logits,
+    #                                                                            from_logits=True))
+    #             train_prob = tf.nn.softmax(logits=train_logits, axis=1)
+    #             train_pred = tf.argmax(train_prob, axis=1)
+    #             metric_train.update_state(label, train_pred)
+    #
+    #         grads = tape.gradient(loss, model.trainable_variables)
+    #         grads_and_vars = zip(grads, model.trainable_variables)
+    #         optimizer.apply_gradients(grads_and_vars=grads_and_vars)
+    #
+    #         print("Epoch: {}/{}, step: {}/{}, loss: {:.5f}, train accuracy: {:.5f}".format(epoch + 1,
+    #                                                                                        config.EPOCHS,
+    #                                                                                        step + 1,
+    #                                                                                        train_count // config.BATCH_SIZE,
+    #                                                                                        loss,
+    #                                                                                        metric_train.result().numpy()))
+    #
+    #     metric_valid.reset_states()
+    #     for image, label in valid_dataset:
+    #         logits = model(image)
+    #         prob = tf.nn.softmax(logits=logits, axis=1)
+    #         pred = tf.argmax(prob, axis=1)
+    #         metric_valid.update_state(label, pred)
+    #
+    #     print("Epoch: {}/{}, valid accuracy: {:.5f}".format(epoch + 1, config.EPOCHS, metric_valid.result().numpy()))
 
 
     # save the weights

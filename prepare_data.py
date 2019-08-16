@@ -32,6 +32,8 @@ def get_images_and_labels(data_root_dir):
 
 def get_dataset(dataset_root_dir):
     all_image_path, all_image_label = get_images_and_labels(data_root_dir=dataset_root_dir)
+    # print("image_path: {}".format(all_image_path[:]))
+    # print("image_label: {}".format(all_image_label[:]))
     # load the dataset and preprocess images
     image_dataset = tf.data.Dataset.from_tensor_slices(all_image_path).map(load_and_preprocess_image)
     label_dataset = tf.data.Dataset.from_tensor_slices(all_image_label)
