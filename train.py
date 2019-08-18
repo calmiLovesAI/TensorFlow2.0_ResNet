@@ -45,8 +45,8 @@ if __name__ == '__main__':
     train_loss = tf.keras.metrics.Mean(name='train_loss')
     train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy')
 
-    valid_loss = tf.keras.metrics.Mean(name='test_loss')
-    valid_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='test_accuracy')
+    valid_loss = tf.keras.metrics.Mean(name='valid_loss')
+    valid_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='valid_accuracy')
 
     @tf.function
     def train_step(images, labels):

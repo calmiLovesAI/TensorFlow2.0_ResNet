@@ -15,10 +15,25 @@ if __name__ == '__main__':
     train_dataset, valid_dataset, test_dataset, train_count, valid_count, test_count = generate_datasets()
     # print(train_dataset)
     # load the model
-    new_model = get_model()
+    model = get_model()
+    model.load_weights(filepath=config.save_model_dir)
 
-    new_model.load_weights(filepath=config.save_model_dir)
-    print("----------start evaluating---------")
     # Get the accuracy on the test set
-    loss, acc = new_model.evaluate(test_dataset, steps=test_count // config.BATCH_SIZE)
-    print("The accuracy on test set is: {:6.3f}%".format(acc*100))
+    loss_object = tf.keras.metrics.SparseCategoricalCrossentropy()
+    test_loss = tf.keras.metrics.Mean()
+    test_accuracy = tf.keras.metrics.SparseCategoricalAccuracy()
+
+    @tf.function
+    def test_step(images, labels):
+        predictions = model(images)
+        t_loss = loss_object(labels, predictions)
+
+        test_loss(t_loss)
+        test_accuracy(labels, predictions)
+
+    for test_images, test_labels in test_dataset:
+        test_step(test_images, test_labels)
+        print("loss: {:.5f}, test accuracy: {:.5f}".format(test_loss.result(),
+                                                           test_accuracy.result()))
+
+    print("The accuracy on test set is: {:.3f}%".format(test_accuracy.result()*100))
