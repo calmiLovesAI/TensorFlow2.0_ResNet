@@ -24,7 +24,6 @@ class BasicBlock(tf.keras.layers.Layer):
         else:
             self.downsample = lambda x: x
 
-
     def call(self, inputs, training=None):
         identity = self.downsample(inputs)
 
@@ -83,7 +82,7 @@ class BottleNeck(tf.keras.layers.Layer):
 
 def build_res_block_1(filter_num, blocks, stride=1):
     res_block = tf.keras.Sequential()
-    res_block.add(BasicBlock(filter_num, stride))
+    res_block.add(BasicBlock(filter_num, stride=stride))
 
     for _ in range(1, blocks):
         res_block.add(BasicBlock(filter_num, stride=1))
