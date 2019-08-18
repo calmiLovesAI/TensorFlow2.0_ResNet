@@ -23,3 +23,4 @@ Run **evaluate.py** to evaluate the model's performance on the test dataset.
 
 ## References
 1. The original paper: https://arxiv.org/abs/1512.03385
+2. The TensorFlow official tutorials: https://tensorflow.google.cn/beta/tutorials/quickstart/advanced
