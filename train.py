@@ -31,9 +31,6 @@ if __name__ == '__main__':
     # get the original_dataset
     train_dataset, valid_dataset, test_dataset, train_count, valid_count, test_count = generate_datasets()
 
-    # Use command tensorboard --logdir "log" to start tensorboard
-    # tensorboard = tf.keras.callbacks.TensorBoard(log_dir='log')
-    # callback_list = [tensorboard]
 
     # create model
     model = get_model()
