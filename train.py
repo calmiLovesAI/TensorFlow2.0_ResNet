@@ -3,7 +3,7 @@ import tensorflow as tf
 from models import resnet50, resnet101, resnet152, resnet34
 import config
 from prepare_data import generate_datasets
-
+import math
 
 def get_model():
     model = resnet50.ResNet50()
@@ -73,7 +73,7 @@ if __name__ == '__main__':
             print("Epoch: {}/{}, step: {}/{}, loss: {:.5f}, accuracy: {:.5f}".format(epoch + 1,
                                                                                      config.EPOCHS,
                                                                                      step,
-                                                                                     train_count // config.BATCH_SIZE,
+                                                                                     math.ceil(train_count / config.BATCH_SIZE),
                                                                                      train_loss.result(),
                                                                                      train_accuracy.result()))
 
