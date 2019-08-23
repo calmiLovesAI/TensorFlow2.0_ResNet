@@ -88,4 +88,4 @@ if __name__ == '__main__':
                                                                   valid_loss.result(),
                                                                   valid_accuracy.result()))
 
-    model.save_weights(config.save_model_dir, save_format='tf')
+    model.save_weights(filepath=config.save_model_dir, save_format='tf')
