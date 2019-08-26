@@ -5,7 +5,8 @@ import config
 from prepare_data import generate_datasets
 import math
 
-def get_model():
+def get_model(flag):
+    tf.keras.backend.set_learning_phase(flag)
     model = resnet50.ResNet50()
     if config.model == "resnet34":
         model = resnet34.ResNet34()
@@ -33,7 +34,7 @@ if __name__ == '__main__':
 
 
     # create model
-    model = get_model()
+    model = get_model(flag=1)
 
     # define loss and optimizer
     loss_object = tf.keras.losses.SparseCategoricalCrossentropy()

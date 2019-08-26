@@ -15,7 +15,7 @@ if __name__ == '__main__':
     train_dataset, valid_dataset, test_dataset, train_count, valid_count, test_count = generate_datasets()
     # print(train_dataset)
     # load the model
-    model = get_model()
+    model = get_model(flag=0)
     model.load_weights(filepath=config.save_model_dir)
 
     # Get the accuracy on the test set
