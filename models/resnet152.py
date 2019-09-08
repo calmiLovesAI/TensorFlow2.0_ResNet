@@ -32,7 +32,7 @@ class ResNet152(tf.keras.Model):
         self.avgpool = tf.keras.layers.GlobalAveragePooling2D()
         self.fc = tf.keras.layers.Dense(units=num_classes, activation=tf.keras.activations.softmax)
 
-    def call(self, inputs, training=None):
+    def call(self, inputs, training=None, mask=None):
         pre = self.preprocess(inputs)
         l1 = self.layer1(pre)
         l2 = self.layer2(l1)
