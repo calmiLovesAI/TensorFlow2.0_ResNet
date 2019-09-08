@@ -92,7 +92,7 @@ def build_res_block_1(filter_num, blocks, stride=1):
 
 def build_res_block_2(filter_num, blocks, stride=1):
     res_block = tf.keras.Sequential()
-    res_block.add(BottleNeck(filter_num, stride))
+    res_block.add(BottleNeck(filter_num, stride=stride))
 
     for _ in range(1, blocks):
         res_block.add(BottleNeck(filter_num * 4, stride=1))
