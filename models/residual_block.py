@@ -95,6 +95,6 @@ def build_res_block_2(filter_num, blocks, stride=1):
     res_block.add(BottleNeck(filter_num, stride=stride))
 
     for _ in range(1, blocks):
-        res_block.add(BottleNeck(filter_num * 4, stride=1))
+        res_block.add(BottleNeck(filter_num, stride=1))
 
     return res_block

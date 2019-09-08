@@ -1,7 +1,7 @@
 # some training parameters
 EPOCHS = 50
 BATCH_SIZE = 8
-NUM_CLASSES = 10
+NUM_CLASSES = 5
 image_height = 224
 image_width = 224
 channels = 3
@@ -12,7 +12,7 @@ valid_dir = dataset_dir + "valid"
 test_dir = dataset_dir + "test"
 
 # choose a network
-model = "resnet34"
-# model = "resnet50"
+# model = "resnet34"
+model = "resnet50"
 # model = "resnet101"
 # model = "resnet152"
