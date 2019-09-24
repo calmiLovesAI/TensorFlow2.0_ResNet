@@ -1,1 +1,1 @@
-The dataset include train set, valid set and test set.
+The dataset includes train set, valid set and test set.

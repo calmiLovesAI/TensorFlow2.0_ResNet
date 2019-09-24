@@ -28,10 +28,10 @@ class BasicBlock(tf.keras.layers.Layer):
         identity = self.downsample(inputs)
 
         conv1 = self.conv1(inputs)
-        bn1 = self.bn1(conv1)
+        bn1 = self.bn1(conv1, training=training)
         relu = tf.nn.relu(bn1)
         conv2 = self.conv2(relu)
-        bn2 = self.bn2(conv2)
+        bn2 = self.bn2(conv2, training=training)
 
         output = tf.nn.relu(tf.keras.layers.add([identity, bn2]))
 
@@ -68,13 +68,13 @@ class BottleNeck(tf.keras.layers.Layer):
         identity = self.downsample(inputs)
 
         conv1 = self.conv1(inputs)
-        bn1 = self.bn1(conv1)
+        bn1 = self.bn1(conv1, training=training)
         relu1 = tf.nn.relu(bn1)
         conv2 = self.conv2(relu1)
-        bn2 = self.bn2(conv2)
+        bn2 = self.bn2(conv2, training=training)
         relu2 = tf.nn.relu(bn2)
         conv3 = self.conv3(relu2)
-        bn3 = self.bn3(conv3)
+        bn3 = self.bn3(conv3, training=training)
 
         output = tf.nn.relu(tf.keras.layers.add([identity, bn3]))
 

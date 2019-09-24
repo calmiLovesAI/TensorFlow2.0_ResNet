@@ -5,8 +5,8 @@ import config
 from prepare_data import generate_datasets
 import math
 
-def get_model(flag):
-    tf.keras.backend.set_learning_phase(flag)
+
+def get_model():
     model = resnet50.ResNet50()
     if config.model == "resnet34":
         model = resnet34.ResNet34()
@@ -34,7 +34,7 @@ if __name__ == '__main__':
 
 
     # create model
-    model = get_model(flag=1)
+    model = get_model()
 
     # define loss and optimizer
     loss_object = tf.keras.losses.SparseCategoricalCrossentropy()
@@ -49,7 +49,7 @@ if __name__ == '__main__':
     @tf.function
     def train_step(images, labels):
         with tf.GradientTape() as tape:
-            predictions = model(images)
+            predictions = model(images, training=True)
             loss = loss_object(y_true=labels, y_pred=predictions)
         gradients = tape.gradient(loss, model.trainable_variables)
         optimizer.apply_gradients(grads_and_vars=zip(gradients, model.trainable_variables))
@@ -59,7 +59,7 @@ if __name__ == '__main__':
 
     @tf.function
     def valid_step(images, labels):
-        predictions = model(images)
+        predictions = model(images, training=False)
         v_loss = loss_object(labels, predictions)
 
         valid_loss(v_loss)
@@ -67,6 +67,10 @@ if __name__ == '__main__':
 
     # start training
     for epoch in range(config.EPOCHS):
+        train_loss.reset_states()
+        train_accuracy.reset_states()
+        valid_loss.reset_states()
+        valid_accuracy.reset_states()
         step = 0
         for images, labels in train_dataset:
             step += 1

@@ -4,8 +4,8 @@ A ResNet(**ResNet34, ResNet50, ResNet101, ResNet152**) implementation using Tens
 
 ## Train
 1. Requirements:
-+ Python 3.6
-+ Tensorflow 2.0.0-beta1
++ Python >= 3.6
++ Tensorflow >= 2.0.0-rc2
 2. To train the ResNet on your own dataset, you can put the dataset under the folder **original dataset**, and the directory should look like this:
 ```
 |——original dataset

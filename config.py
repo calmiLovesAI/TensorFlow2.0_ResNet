@@ -13,6 +13,6 @@ test_dir = dataset_dir + "test"
 
 # choose a network
 # model = "resnet34"
-# model = "resnet50"
-model = "resnet101"
+model = "resnet50"
+# model = "resnet101"
 # model = "resnet152"
