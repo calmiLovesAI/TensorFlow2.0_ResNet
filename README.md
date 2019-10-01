@@ -6,7 +6,7 @@ See https://github.com/calmisential/Basic_CNNs_TensorFlow2.0 for more CNNs.
 ## Train
 1. Requirements:
 + Python >= 3.6
-+ Tensorflow >= 2.0.0-rc2
++ Tensorflow == 2.0.0-rc2
 2. To train the ResNet on your own dataset, you can put the dataset under the folder **original dataset**, and the directory should look like this:
 ```
 |——original dataset
