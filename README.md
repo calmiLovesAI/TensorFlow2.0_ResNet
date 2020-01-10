@@ -1,12 +1,12 @@
 # TensorFlow2.0_ResNet
-A ResNet(**ResNet34, ResNet50, ResNet101, ResNet152**) implementation using TensorFlow-2.0
+A ResNet(**ResNet18, ResNet34, ResNet50, ResNet101, ResNet152**) implementation using TensorFlow-2.0
 
 See https://github.com/calmisential/Basic_CNNs_TensorFlow2.0 for more CNNs.
 
 ## Train
 1. Requirements:
 + Python >= 3.6
-+ Tensorflow == 2.0.0-rc2
++ Tensorflow == 2.0.0
 2. To train the ResNet on your own dataset, you can put the dataset under the folder **original dataset**, and the directory should look like this:
 ```
 |——original dataset
@@ -22,7 +22,7 @@ See https://github.com/calmisential/Basic_CNNs_TensorFlow2.0 for more CNNs.
 Run **evaluate.py** to evaluate the model's performance on the test dataset.
 
 ## The networks I have implemented with tensorflow2.0:
-+ [ResNet34, ResNet50, ResNet101, ResNet152](https://github.com/calmisential/TensorFlow2.0_ResNet)
++ [ResNet18, ResNet34, ResNet50, ResNet101, ResNet152](https://github.com/calmisential/TensorFlow2.0_ResNet)
 + [InceptionV3](https://github.com/calmisential/TensorFlow2.0_InceptionV3)
 
 

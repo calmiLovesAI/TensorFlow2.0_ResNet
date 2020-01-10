@@ -24,16 +24,16 @@ class BasicBlock(tf.keras.layers.Layer):
         else:
             self.downsample = lambda x: x
 
-    def call(self, inputs, training=None):
-        identity = self.downsample(inputs)
+    def call(self, inputs, training=None, **kwargs):
+        residual = self.downsample(inputs)
 
-        conv1 = self.conv1(inputs)
-        bn1 = self.bn1(conv1, training=training)
-        relu = tf.nn.relu(bn1)
-        conv2 = self.conv2(relu)
-        bn2 = self.bn2(conv2, training=training)
+        x = self.conv1(inputs)
+        x = self.bn1(x, training=training)
+        x = tf.nn.relu(x)
+        x = self.conv2(x)
+        x = self.bn2(x, training=training)
 
-        output = tf.nn.relu(tf.keras.layers.add([identity, bn2]))
+        output = tf.nn.relu(tf.keras.layers.add([residual, x]))
 
         return output
 
@@ -63,24 +63,24 @@ class BottleNeck(tf.keras.layers.Layer):
                                                    strides=stride))
         self.downsample.add(tf.keras.layers.BatchNormalization())
 
+    def call(self, inputs, training=None, **kwargs):
+        residual = self.downsample(inputs)
 
-    def call(self, inputs, training=None):
-        identity = self.downsample(inputs)
+        x = self.conv1(inputs)
+        x = self.bn1(x, training=training)
+        x = tf.nn.relu(x)
+        x = self.conv2(x)
+        x = self.bn2(x, training=training)
+        x = tf.nn.relu(x)
+        x = self.conv3(x)
+        x = self.bn3(x, training=training)
 
-        conv1 = self.conv1(inputs)
-        bn1 = self.bn1(conv1, training=training)
-        relu1 = tf.nn.relu(bn1)
-        conv2 = self.conv2(relu1)
-        bn2 = self.bn2(conv2, training=training)
-        relu2 = tf.nn.relu(bn2)
-        conv3 = self.conv3(relu2)
-        bn3 = self.bn3(conv3, training=training)
-
-        output = tf.nn.relu(tf.keras.layers.add([identity, bn3]))
+        output = tf.nn.relu(tf.keras.layers.add([residual, x]))
 
         return output
 
-def build_res_block_1(filter_num, blocks, stride=1):
+
+def make_basic_block_layer(filter_num, blocks, stride=1):
     res_block = tf.keras.Sequential()
     res_block.add(BasicBlock(filter_num, stride=stride))
 
@@ -90,7 +90,7 @@ def build_res_block_1(filter_num, blocks, stride=1):
     return res_block
 
 
-def build_res_block_2(filter_num, blocks, stride=1):
+def make_bottleneck_layer(filter_num, blocks, stride=1):
     res_block = tf.keras.Sequential()
     res_block.add(BottleNeck(filter_num, stride=stride))
 

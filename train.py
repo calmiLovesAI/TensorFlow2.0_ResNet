@@ -1,23 +1,23 @@
 from __future__ import absolute_import, division, print_function
 import tensorflow as tf
-from models import resnet50, resnet101, resnet152, resnet34
+from models.resnet import resnet_18, resnet_34, resnet_50, resnet_101, resnet_152
 import config
 from prepare_data import generate_datasets
 import math
 
 
 def get_model():
-    model = resnet50.ResNet50()
+    model = resnet_50()
+    if config.model == "resnet18":
+        model = resnet_18()
     if config.model == "resnet34":
-        model = resnet34.ResNet34()
+        model = resnet_34()
     if config.model == "resnet101":
-        model = resnet101.ResNet101()
+        model = resnet_101()
     if config.model == "resnet152":
-        model = resnet152.ResNet152()
-
+        model = resnet_152()
     model.build(input_shape=(None, config.image_height, config.image_width, config.channels))
     model.summary()
-
     return model
 
 

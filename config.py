@@ -12,6 +12,7 @@ valid_dir = dataset_dir + "valid"
 test_dir = dataset_dir + "test"
 
 # choose a network
+# model = "resnet18"
 # model = "resnet34"
 model = "resnet50"
 # model = "resnet101"
